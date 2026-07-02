@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOT. — Acne patches, minus the markup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14213D;
+    --ink-soft:#3B4A6B;
+    --paper:#EFEEE6;
+    --paper-dark:#E4E0D2;
+    --white:#FFFFFF;
+    --accent:#FF4D2E;
+    --accent-dark:#DC3A1E;
+    --mint:#75997F;
+    --line:#D3CDBC;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.5;
+  }
+  h1,h2,h3{margin:0;}
+  p{margin:0;}
+  a{color:inherit;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  .display{font-family:'Archivo Black',sans-serif; text-transform:none;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 32px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--accent-dark);
+    font-weight:600;
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{content:""; width:18px; height:1px; background:var(--accent-dark); display:inline-block;}
+  section{padding:96px 0;}
+  @media(max-width:720px){ section{padding:64px 0;} .wrap{padding:0 20px;} }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(239,238,230,.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  nav.wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    height:72px;
+  }
+  .logo{
+    font-family:'Archivo Black',sans-serif;
+    font-size:22px;
+    letter-spacing:-.01em;
+    display:flex; align-items:baseline; gap:2px;
+  }
+  .logo .dot-char{ color:var(--accent); }
+  .navlinks{ display:flex; gap:36px; align-items:center; }
+  .navlinks a{
+    font-size:14.5px; font-weight:600; text-decoration:none; color:var(--ink-soft);
+    transition:color .15s;
+  }
+  .navlinks a:hover{ color:var(--ink); }
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding:13px 24px;
+    font-family:'Inter',sans-serif; font-weight:700; font-size:14.5px;
+    border-radius:var(--radius);
+    text-decoration:none; cursor:pointer; border:none;
+    transition:transform .12s ease, background .15s ease, box-shadow .15s ease;
+  }
+  .btn:active{ transform:translateY(1px); }
+  .btn-primary{ background:var(--accent); color:var(--white); }
+  .btn-primary:hover{ background:var(--accent-dark); }
+  .btn-ghost{ background:transparent; color:var(--ink); border:1.5px solid var(--ink); }
+  .btn-ghost:hover{ background:var(--ink); color:var(--paper); }
+  .btn:focus-visible{ outline:3px solid var(--mint); outline-offset:2px; }
+  .btn-nav{ padding:10px 18px; font-size:13.5px; }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:88px 0 60px;
+    display:grid; grid-template-columns:1.1fr .9fr; gap:48px; align-items:center;
+  }
+  @media(max-width:900px){ .hero{ grid-template-columns:1fr; padding-top:56px;} }
+  .hero h1{
+    font-family:'Archivo Black',sans-serif;
+    font-size:clamp(40px,6vw,68px);
+    line-height:.98;
+    letter-spacing:-.01em;
+    margin:22px 0 22px;
+  }
+  .hero .accent-dot{ color:var(--accent); }
+  .hero-sub{
+    font-size:18px; color:var(--ink-soft); max-width:46ch; margin-bottom:34px;
+  }
+  .hero-ctas{ display:flex; gap:14px; flex-wrap:wrap; }
+  .hero-visual{
+    position:relative; aspect-ratio:1/1; max-width:420px; margin:0 auto;
+  }
+  .patch-ring{
+    position:absolute; inset:0; border-radius:50%;
+    background:radial-gradient(circle at 34% 30%, #ffffff 0%, #f4f1e6 38%, #e3ddc9 62%, #cfc6ac 100%);
+    box-shadow: inset 0 0 0 1px var(--line), 0 30px 60px -20px rgba(20,33,61,.25);
+  }
+  .patch-ring::after{
+    content:""; position:absolute; inset:14%;
+    border-radius:50%;
+    border:2px dashed rgba(20,33,61,.18);
+  }
+  .patch-core{
+    position:absolute; inset:38%; border-radius:50%;
+    background:var(--accent);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 12px 30px -8px rgba(255,77,46,.55);
+  }
+  .patch-core span{
+    font-family:'IBM Plex Mono',monospace; color:var(--white); font-size:12px;
+    font-weight:700; letter-spacing:.08em; text-align:center; text-transform:uppercase;
+  }
+  .hero-tag{
+    position:absolute; bottom:6%; left:-6%;
+    background:var(--white); border:1px solid var(--line);
+    padding:10px 14px; border-radius:var(--radius);
+    font-family:'IBM Plex Mono',monospace; font-size:12px;
+    box-shadow:0 10px 24px -12px rgba(20,33,61,.3);
+  }
+  @media(max-width:900px){ .hero-tag{ left:0; } }
+
+  /* ---------- SPEC STRIP ---------- */
+  .specstrip{
+    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    background:var(--paper-dark);
+    padding:0;
+  }
+  .specstrip .wrap{
+    display:flex; flex-wrap:wrap; gap:0;
+    padding:0;
+  }
+  .spec-item{
+    flex:1 1 180px;
+    padding:22px 24px;
+    border-right:1px solid var(--line);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+  }
+  .spec-item:last-child{ border-right:none; }
+  .spec-item .num{ display:block; font-size:20px; font-weight:700; color:var(--ink); margin-bottom:4px;}
+  .spec-item .lbl{ color:var(--ink-soft); text-transform:uppercase; letter-spacing:.06em; font-size:11px;}
+
+  /* ---------- RECEIPT SECTION (signature) ---------- */
+  .receipt-section{ background:var(--paper); }
+  .receipt-grid{
+    display:grid; grid-template-columns:.9fr 1.1fr; gap:64px; align-items:start; margin-top:28px;
+  }
+  @media(max-width:900px){ .receipt-grid{ grid-template-columns:1fr; gap:40px; } }
+  .receipt-copy h2{
+    font-family:'Archivo Black',sans-serif;
+    font-size:clamp(28px,3.6vw,40px); line-height:1.08; margin-bottom:20px;
+  }
+  .receipt-copy p{ color:var(--ink-soft); font-size:16px; margin-bottom:16px; max-width:44ch;}
+  .receipt-copy .callout{
+    margin-top:24px; padding:16px 18px; background:var(--white); border-left:3px solid var(--accent);
+    font-size:14.5px; font-weight:600;
+  }
+  .receipt{
+    background:var(--white);
+    position:relative;
+    padding:36px 30px 30px;
+    box-shadow:0 24px 50px -24px rgba(20,33,61,.35);
+  }
+  .receipt::before,.receipt::after{
+    content:""; position:absolute; left:0; right:0; height:14px;
+    background-image:radial-gradient(circle at 8px 8px, var(--paper) 8px, transparent 8.5px);
+    background-size:16px 16px; background-repeat:repeat-x;
+  }
+  .receipt::before{ top:-7px; }
+  .receipt::after{ bottom:-7px; transform:rotate(180deg); }
+  .receipt h4{
+    font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:13px;
+    letter-spacing:.1em; text-transform:uppercase; margin-bottom:14px; color:var(--ink-soft);
+  }
+  .receipt-block{ margin-bottom:26px; }
+  .receipt-row{
+    display:flex; justify-content:space-between; gap:12px;
+    font-family:'IBM Plex Mono',monospace; font-size:14px; padding:6px 0;
+    border-bottom:1px dashed var(--line);
+  }
+  .receipt-row.strike span:first-child{ text-decoration:line-through; color:#9b9484; }
+  .receipt-row.strike span:last-child{ text-decoration:line-through; color:#9b9484; }
+  .receipt-total{
+    display:flex; justify-content:space-between; padding-top:12px; margin-top:4px;
+    font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:16px;
+  }
+  .receipt-total.big span:last-child{ color:var(--accent-dark); }
+  .receipt-total.small span:last-child{ color:var(--mint); }
+  .receipt-note{ font-size:11px; color:#9b9484; margin-top:18px; font-family:'IBM Plex Mono',monospace;}
+
+  /* ---------- PHILOSOPHY ---------- */
+  .philosophy{ background:var(--ink); color:var(--paper); }
+  .phi-grid{
+    display:grid; grid-template-columns:.85fr 1.15fr; gap:64px; align-items:center;
+  }
+  @media(max-width:900px){ .phi-grid{ grid-template-columns:1fr; gap:44px; } }
+  .philosophy .eyebrow{ color:var(--accent); }
+  .philosophy .eyebrow::before{ background:var(--accent); }
+  .philosophy h2{
+    font-family:'Archivo Black',sans-serif; font-size:clamp(28px,3.6vw,38px); line-height:1.1; margin:18px 0 20px;
+  }
+  .philosophy p{ color:#C7CBDA; font-size:16px; max-width:46ch; margin-bottom:14px; }
+  .sachet{
+    background:#DDD6C1; border-radius:6px; padding:38px 28px;
+    max-width:360px; margin:0 auto; position:relative;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,.5);
+  }
+  .sachet-inner{
+    border:1.5px dashed rgba(20,33,61,.35); border-radius:3px; padding:34px 18px;
+    text-align:center; color:var(--ink);
+  }
+  .sachet-inner .logo{ justify-content:center; margin-bottom:10px; }
+  .sachet-inner .sub{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:.08em; color:var(--ink-soft);}
+  .sachet-inner .qty{ font-family:'IBM Plex Mono',monospace; font-size:12px; margin-top:16px; color:var(--ink-soft); border-top:1px solid rgba(20,33,61,.2); padding-top:12px;}
+
+  /* ---------- HOW IT WORKS ---------- */
+  .steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:32px; margin-top:40px; }
+  @media(max-width:820px){ .steps{ grid-template-columns:1fr; } }
+  .step{ border-top:2px solid var(--ink); padding-top:18px; }
+  .step .step-num{ font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--accent-dark); font-weight:700; }
+  .step h3{ font-size:20px; font-weight:800; margin:10px 0 8px; }
+  .step p{ color:var(--ink-soft); font-size:15px; }
+
+  /* ---------- BUNDLES ---------- */
+  .bundles-head{ display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px; margin-bottom:36px;}
+  .bundles-head h2{ font-family:'Archivo Black',sans-serif; font-size:clamp(28px,3.6vw,38px); margin-top:14px;}
+  .bundle-grid{ display:grid; grid-template-columns:repeat(5,1fr); gap:16px; }
+  @media(max-width:1050px){ .bundle-grid{ grid-template-columns:repeat(3,1fr);} }
+  @media(max-width:680px){ .bundle-grid{ grid-template-columns:repeat(2,1fr);} }
+  .bundle-card{
+    background:var(--white); border:1px solid var(--line); padding:24px 18px;
+    display:flex; flex-direction:column; gap:10px; position:relative;
+    transition:border-color .15s, transform .15s;
+  }
+  .bundle-card:hover{ border-color:var(--ink); transform:translateY(-3px); }
+  .bundle-card.best{ border:2px solid var(--accent); }
+  .badge{
+    position:absolute; top:-11px; left:16px; background:var(--accent); color:#fff;
+    font-family:'IBM Plex Mono',monospace; font-size:10.5px; font-weight:700;
+    letter-spacing:.06em; padding:4px 8px; text-transform:uppercase;
+  }
+  .badge.alt{ background:var(--mint); }
+  .bundle-name{ font-weight:800; font-size:16px; margin-top:4px;}
+  .bundle-count{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft);}
+  .bundle-price{ font-family:'IBM Plex Mono',monospace; font-size:26px; font-weight:700; margin-top:6px;}
+  .bundle-price sup{ font-size:13px; font-weight:600; }
+  .bundle-per{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--mint); font-weight:600;}
+  .bundle-select{
+    margin-top:12px; width:100%; padding:10px; font-weight:700; font-size:13.5px;
+    background:var(--paper); border:1.5px solid var(--ink); color:var(--ink); cursor:pointer;
+    border-radius:var(--radius); transition:.15s;
+  }
+  .bundle-select:hover{ background:var(--ink); color:var(--paper); }
+
+  /* ---------- FAQ ---------- */
+  .faq{ max-width:760px; margin:0 auto; }
+  .faq-item{ border-bottom:1px solid var(--line); }
+  .faq-item summary{
+    cursor:pointer; padding:20px 4px; font-weight:700; font-size:16px;
+    display:flex; justify-content:space-between; align-items:center; list-style:none;
+  }
+  .faq-item summary::-webkit-details-marker{ display:none; }
+  .faq-item summary::after{ content:"+"; font-family:'IBM Plex Mono',monospace; font-size:20px; color:var(--accent-dark); }
+  .faq-item[open] summary::after{ content:"–"; }
+  .faq-item p{ padding:0 4px 20px; color:var(--ink-soft); font-size:15px; max-width:60ch; }
+
+  /* ---------- ORDER FORM ---------- */
+  .order-section{ background:var(--ink); color:var(--paper); }
+  .order-section .eyebrow{ color:var(--accent); }
+  .order-section .eyebrow::before{ background:var(--accent); }
+  .order-head h2{ font-family:'Archivo Black',sans-serif; font-size:clamp(28px,3.6vw,38px); margin:14px 0 8px;}
+  .order-head p{ color:#C7CBDA; max-width:52ch; }
+  .no-payment-strip{
+    display:inline-flex; align-items:center; gap:10px; margin-top:18px;
+    background:rgba(117,153,127,.16); border:1px solid var(--mint); color:var(--mint);
+    padding:9px 14px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; font-weight:600;
+  }
+  .order-layout{ display:grid; grid-template-columns:1fr 1.4fr; gap:40px; margin-top:44px; align-items:flex-start;}
+  @media(max-width:960px){ .order-layout{ grid-template-columns:1fr; } }
+  .order-form-card{ background:var(--paper); color:var(--ink); padding:32px; }
+  .field-group{ margin-bottom:20px; }
+  .field-group label{ display:block; font-family:'IBM Plex Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:.06em; margin-bottom:7px; color:var(--ink-soft); font-weight:600;}
+  .field-group input, .field-group select, .field-group textarea{
+    width:100%; padding:12px 13px; border:1.5px solid var(--line); background:var(--white);
+    font-family:'Inter',sans-serif; font-size:14.5px; color:var(--ink); border-radius:var(--radius);
+  }
+  .field-group input:focus, .field-group select:focus, .field-group textarea:focus{
+    outline:none; border-color:var(--accent);
+  }
+  .field-row{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media(max-width:520px){ .field-row{ grid-template-columns:1fr; } }
+  .radio-bundles{ display:flex; flex-direction:column; gap:10px; }
+  .radio-card{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    border:1.5px solid var(--line); padding:12px 14px; cursor:pointer; background:var(--white);
+    transition:.15s;
+  }
+  .radio-card input{ accent-color:var(--accent); width:16px; height:16px; }
+  .radio-card.checked{ border-color:var(--accent); background:#FFF3EF; }
+  .radio-card .rc-left{ display:flex; align-items:center; gap:10px; }
+  .radio-card .rc-name{ font-weight:700; font-size:14px; }
+  .radio-card .rc-count{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--ink-soft); }
+  .radio-card .rc-price{ font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:15px; }
+  .summary-card{
+    background:#1E2B4F; border:1px solid rgba(199,203,218,.2); padding:28px;
+  }
+  .summary-row{ display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:14px; padding:9px 0; border-bottom:1px dashed rgba(199,203,218,.25);}
+  .summary-total{ display:flex; justify-content:space-between; padding-top:14px; margin-top:6px; font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:19px; color:var(--accent);}
+  .summary-fine{ font-size:12px; color:#9AA3C0; margin-top:16px; line-height:1.6; }
+  .submit-btn{ width:100%; margin-top:22px; padding:16px; font-size:15px; }
+  .confirm-panel{ display:none; text-align:center; padding:60px 32px; background:var(--paper); color:var(--ink); }
+  .confirm-panel.show{ display:block; }
+  .order-form-card.hide{ display:none; }
+  .confirm-panel .big-dot{
+    width:64px; height:64px; border-radius:50%; background:var(--accent); margin:0 auto 22px;
+    display:flex; align-items:center; justify-content:center; color:#fff; font-family:'IBM Plex Mono',monospace; font-weight:700;
+  }
+  .confirm-panel h3{ font-family:'Archivo Black',sans-serif; font-size:24px; margin-bottom:10px; }
+  .confirm-panel p{ color:var(--ink-soft); max-width:44ch; margin:0 auto 6px; }
+  .confirm-ref{ font-family:'IBM Plex Mono',monospace; font-weight:700; margin-top:16px; display:inline-block; background:var(--paper-dark); padding:8px 14px; }
+
+  /* ---------- FOOTER ---------- */
+  footer{ background:var(--ink); color:#9AA3C0; padding:40px 0; border-top:1px solid rgba(199,203,218,.15); }
+  .foot-row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; }
+  .foot-row .logo{ color:var(--paper); }
+  footer .fine{ font-size:12.5px; }
+
+  .sr-only{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="wrap">
+    <div class="logo">DOT<span class="dot-char">.</span></div>
+    <div class="navlinks">
+      <a href="#product">Product</a>
+      <a href="#receipt">The receipt</a>
+      <a href="#bundles">Bundles</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a href="#order" class="btn btn-primary btn-nav">Order now</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero wrap" id="product">
+  <div>
+    <div class="eyebrow">Acne patches, minus the markup</div>
+    <h1>Clears skin<span class="accent-dot">.</span><br>Not wallets<span class="accent-dot">.</span></h1>
+    <p class="hero-sub">Same medical-grade hydrocolloid as patches costing 3x more. We just didn't put it in a box you're going to throw away in ten seconds.</p>
+    <div class="hero-ctas">
+      <a href="#bundles" class="btn btn-primary">Shop bundles</a>
+      <a href="#receipt" class="btn btn-ghost">See where your money goes</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="patch-ring"></div>
+    <div class="patch-core"><span>10hr<br>seal</span></div>
+    <div class="hero-tag">₹22 <span style="color:#9b9484">/ patch</span></div>
+  </div>
+</section>
+
+<!-- SPEC STRIP -->
+<div class="specstrip">
+  <div class="wrap">
+    <div class="spec-item"><span class="num">0.2mm</span><span class="lbl">Ultra-thin hydrocolloid</span></div>
+    <div class="spec-item"><span class="num">8–10hr</span><span class="lbl">Overnight absorption window</span></div>
+    <div class="spec-item"><span class="num">Matte</span><span class="lbl">Invisible under makeup</span></div>
+    <div class="spec-item"><span class="num">Vegan</span><span class="lbl">Cruelty-free, no fragrance</span></div>
+    <div class="spec-item"><span class="num">₹3.50</span><span class="lbl">Avg. cost per patch</span></div>
+  </div>
+</div>
+
+<!-- RECEIPT / STORY -->
+<section class="receipt-section" id="receipt">
+  <div class="wrap">
+    <div class="eyebrow">The receipt</div>
+    <div class="receipt-grid">
+      <div class="receipt-copy">
+        <h2>Here's what you're actually paying for.</h2>
+        <p>Most acne-patch brands spend more getting you to notice the box than they spend on the patch inside it. Foil pouches, printed inserts, a "premium unboxing" — none of it touches your skin.</p>
+        <p>We looked at where that money goes, and cut the parts that don't work on your face.</p>
+        <div class="callout">We don't skip quality to be cheap. We skip packaging to be honest about the price.</div>
+      </div>
+      <div class="receipt">
+        <div class="receipt-block">
+          <h4>Typical acne-patch brand</h4>
+          <div class="receipt-row"><span>Hydrocolloid patch</span><span>₹108</span></div>
+	  <div class="receipt-row"><span>Delivery</span><span>₹70</span></div>
+          <div class="receipt-row"><span>Printed box + insert</span><span>₹36</span></div>
+          <div class="receipt-row"><span>Individual foil wrap</span><span>₹14</span></div>
+          <div class="receipt-row"><span>"Shelf appeal" margin</span><span>₹26</span></div>
+          <div class="receipt-total big"><span>You pay</span><span>₹254 / pack of patch</span></div>
+        </div>
+        <div class="receipt-block" style="margin-bottom:6px;">
+          <h4>DOT.</h4>
+          <div class="receipt-row"><span>Hydrocolloid patch</span><span>₹108</span></div>
+	  <div class="receipt-row"><span>Delivery</span><span>₹70</span></div>
+          <div class="receipt-row"><span>Simple Packaging</span><span>₹9</span></div>
+          <div class="receipt-row strike"><span>Printed box + insert</span><span>skipped</span></div>
+          <div class="receipt-row strike"><span>Individual foil wrap</span><span>skipped</span></div>
+          <div class="receipt-total small"><span>You pay</span><span>₹187 / patch</span></div>
+        </div>
+        <p class="receipt-note">*Illustrative comparison based on typical category cost structures, not a specific competitor's audited figures.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section class="philosophy">
+  <div class="wrap phi-grid">
+    <div class="sachet">
+      <div class="sachet-inner">
+        <div class="logo">DOT<span class="dot-char" style="color:var(--accent)">.</span></div>
+        <div class="sub">HYDROCOLLOID ACNE PATCHES</div>
+        <div class="qty">36 PATCHES · NET WT 4G · MADE IN INDIA</div>
+      </div>
+    </div>
+    <div>
+      <div class="eyebrow">Why the packaging looks like this</div>
+      <h2>We didn't forget to make it pretty. We chose not to.</h2>
+      <p>A plain sachet, one colour of ink, no fake window. It's not a corner we cut — it's the whole point. Every rupee we don't spend on packaging design is a rupee that comes off your price tag.</p>
+      <p>If you're after a patch that looks nice sitting on a shelf, this probably isn't it. If you want one that works while you sleep and costs what it should — that's the whole product.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="wrap"><br>
+  <div class="eyebrow">How it works</div>
+  <h2 class="display" style="font-size:clamp(28px,3.6vw,38px); margin-top:14px;">Three steps. No routine required.</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01 / CLEAN</div>
+      <h3>Wash and dry the spot</h3>
+      <p>Cleanse the area and pat it fully dry — hydrocolloid only seals properly on dry skin.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02 / PRESS</div>
+      <h3>Press the dot on</h3>
+      <p>Peel, place directly over the blemish, and press the edges down so it seals flat.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03 / PEEL</div>
+      <h3>Leave it 8–10 hours</h3>
+      <p>Wear it overnight or under makeup. Peel off once it turns white and swap for a fresh one if needed.</p>
+    </div>
+  </div>
+</section>
+
+<!-- BUNDLES -->
+<section class="wrap" id="bundles">
+  <div class="bundles-head">
+    <div><br>
+      <div class="eyebrow">Bundles</div>
+      <h2>Buy the amount that makes sense for you.</h2>
+    </div>
+    <p style="color:var(--ink-soft); max-width:34ch; font-size:14.5px;">Every pack has 36 patches. Bigger bundles just mean a lower per-patch price — same maths as the receipt above.</p>
+  </div>
+
+  <div class="bundle-grid" id="bundleGrid">
+    <div class="bundle-card" data-id="solo" data-name="Solo — 1 Pack" data-count="36 patches" data-price="187">
+      <div class="bundle-name">Solo</div>
+      <div class="bundle-count">1 pack · 36 patches</div>
+      <div class="bundle-price">₹187</div>
+      <div class="bundle-per">₹5.20/ patch</div>
+      <button class="bundle-select" type="button">Select</button>
+    </div>
+
+    <div class="bundle-card" data-id="duo" data-name="Duo — 2 Packs" data-count="64 patches" data-price="349">
+      <div class="bundle-name">Duo</div>
+      <div class="bundle-count">2 packs · 64 patches</div>
+      <div class="bundle-price">₹349</div>
+      <div class="bundle-per">₹4.85 / patch</div>
+      <button class="bundle-select" type="button">Select</button>
+    </div>
+
+    <div class="bundle-card best" data-id="trio" data-name="Trio — 3 Packs" data-count="108 patches" data-price="399">
+      <span class="badge">Most picked</span>
+      <div class="bundle-name">Trio</div>
+      <div class="bundle-count">3 packs · 108 patches</div>
+      <div class="bundle-price">₹399</div>
+      <div class="bundle-per">₹3.70 / patch</div>
+      <button class="bundle-select" type="button">Select</button>
+    </div>
+
+    <div class="bundle-card" data-id="stock" data-name="Stock Up — 5 Packs" data-count="180 patches" data-price="689">
+      <div class="bundle-name">Stock Up</div>
+      <div class="bundle-count">5 packs · 180 patches</div>
+      <div class="bundle-price">₹689</div>
+      <div class="bundle-per">₹3.85 / patch</div>
+      <button class="bundle-select" type="button">Select</button>
+    </div>
+
+    <div class="bundle-card" data-id="squad" data-name="Friend Pack — 2×3 Packs" data-count="6 packs · 2x108 patches" data-price="699">
+      <span class="badge alt">Split & save</span>
+      <div class="bundle-name">Friend Pack</div>
+      <div class="bundle-count">2×3 Packs· 2x108 patches</div>
+      <div class="bundle-price">₹699</div>
+      <div class="bundle-per">₹3.23 / patch</div>
+      <button class="bundle-select" type="button">Select</button>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="wrap" id="faq"><br>
+  <div class="eyebrow">FAQ</div>
+  <h2 class="display" style="font-size:clamp(28px,3.6vw,38px); margin:14px 0 30px;">Questions, answered plainly.</h2>
+  <div class="faq">
+    <details class="faq-item">
+      <summary>Why is the packaging so plain?</summary>
+      <p>Because printed boxes, foil pouches and individual wrapping cost money — and none of it improves the patch. We spend on the hydrocolloid instead, and pass the rest back as a lower price.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Is the quality actually the same as pricier brands?</summary>
+      <p>Yes — same medical-grade hydrocolloid material, same absorption performance. The difference is entirely in what surrounds the patch, not what's in it.</p>
+    </details>
+    <details class="faq-item">
+      <summary>How do I pay after ordering?</summary>
+      <p>You don't pay anything on this page. Once you submit your order, we'll email you a secure payment link within 24 hours to confirm and dispatch it.</p>
+    </details>
+    <details class="faq-item">
+      <summary>What's in the Friend Pack?</summary>
+      <p>Six individual 36-patch packs (2×3), meant to be split between two friends — works out as the lowest per-friend cost if you're ordering with a roommate or a classmate.</p>
+    </details>
+    <details class="faq-item">
+      <summary>How long does delivery take?</summary>
+      <p>Once your payment is confirmed, orders typically ship within 2–4 business days depending on your location.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ORDER FORM -->
+<section class="order-section" id="order">
+  <div class="wrap">
+    <div class="order-head">
+      <div class="eyebrow">Reserve your order</div>
+      <h2>Tell us what you want. Pay later.</h2>
+      <p>Fill this in and we'll hold your bundle. No card details, nothing charged today — just an email with a payment link once we confirm stock and delivery.</p>
+      <div class="no-payment-strip">● No payment required now</div>
+    </div>
+
+    <div class="order-layout">
+      <div class="order-form-card" id="formCard">
+        <form id="orderForm">
+          <div class="field-group">
+            <label for="bundlePick">Choose your bundle</label>
+            <div class="radio-bundles" id="radioBundles"></div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label for="fullName">Full name</label>
+              <input id="fullName" name="fullName" type="text" required placeholder="Riya Shah">
+            </div>
+            <div class="field-group">
+              <label for="phone">Phone number</label>
+              <input id="phone" name="phone" type="tel" required placeholder="98765 43210">
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="email">Email address</label>
+            <input id="email" name="email" type="email" required placeholder="you@email.com">
+          </div>
+
+          <div class="field-group">
+            <label for="address">Delivery address</label>
+            <textarea id="address" name="address" rows="2" required placeholder="Flat / street / area"></textarea>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label for="city">City</label>
+              <input id="city" name="city" type="text" required placeholder="Mumbai">
+            </div>
+            <div class="field-group">
+              <label for="pincode">Pincode</label>
+              <input id="pincode" name="pincode" type="text" required placeholder="400001">
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="notes">Notes <span style="text-transform:none; font-weight:400;">(optional)</span></label>
+            <textarea id="notes" name="notes" rows="2" placeholder="Anything we should know?"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary submit-btn">Reserve this order</button>
+        </form>
+      </div>
+
+      <div class="confirm-panel" id="confirmPanel">
+        <div class="big-dot">.</div>
+        <h3>You're in.</h3>
+        <p id="confirmName">We've noted your order.</p>
+        <p>We'll email your payment link within 24 hours — check <span id="confirmEmail" style="font-weight:700;"></span>.</p>
+        <div class="confirm-ref" id="confirmRef"></div>
+      </div>
+
+      <div class="summary-card">
+        <h4 class="mono" style="font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:#9AA3C0; margin-bottom:16px;">Order summary</h4>
+        <div class="summary-row"><span id="sumName">Trio — 3 Packs</span><span id="sumCount">30 patches</span></div>
+        <div class="summary-total"><span>Amount due later</span><span id="sumPrice">₹499</span></div>
+        <p class="summary-fine">Nothing is charged today. This reserves your bundle and sends your details to our team — payment is collected only after we confirm availability and delivery to your pincode.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-row">
+    <div class="logo">DOT<span class="dot-char">.</span></div>
+    <p class="fine">Hydrocolloid acne patches, honestly priced. Made in India.</p>
+  </div>
+</footer>
+
+<script>
+  const bundleData = Array.from(document.querySelectorAll('#bundleGrid .bundle-card')).map(el => ({
+    id: el.dataset.id,
+    name: el.dataset.name,
+    count: el.dataset.count,
+    price: el.dataset.price
+  }));
+
+  const radioWrap = document.getElementById('radioBundles');
+  bundleData.forEach((b, i) => {
+    const label = document.createElement('label');
+    label.className = 'radio-card' + (i === 2 ? ' checked' : '');
+    label.innerHTML = `
+      <div class="rc-left">
+        <input type="radio" name="bundle" value="${b.id}" ${i === 2 ? 'checked' : ''}>
+        <div>
+          <div class="rc-name">${b.name}</div>
+          <div class="rc-count">${b.count}</div>
+        </div>
+      </div>
+      <div class="rc-price">₹${b.price}</div>
+    `;
+    radioWrap.appendChild(label);
+  });
+
+  function updateSummary(id){
+    const b = bundleData.find(x => x.id === id) || bundleData[2];
+    document.getElementById('sumName').textContent = b.name;
+    document.getElementById('sumCount').textContent = b.count;
+    document.getElementById('sumPrice').textContent = '₹' + b.price;
+    document.querySelectorAll('.radio-card').forEach(rc => {
+      const input = rc.querySelector('input');
+      rc.classList.toggle('checked', input.value === id);
+    });
+  }
+  updateSummary('trio');
+
+  radioWrap.addEventListener('change', e => {
+    if (e.target.name === 'bundle') updateSummary(e.target.value);
+  });
+
+  document.querySelectorAll('#bundleGrid .bundle-select').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest('.bundle-card');
+      updateSummary(card.dataset.id);
+      const input = radioWrap.querySelector(`input[value="${card.dataset.id}"]`);
+      if (input) input.checked = true;
+      document.getElementById('order').scrollIntoView({behavior:'smooth'});
+    });
+  });
+
+  // --- RE-ENGINEERED FORM SUBMISSION ---
+  document.getElementById('orderForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    
+    const submitBtn = e.target.querySelector('.submit-btn');
+    submitBtn.textContent = 'Processing...';
+    submitBtn.disabled = true;
+
+    const name = document.getElementById('fullName').value.trim();
+    const email = document.getElementById('email').value.trim();
+
+    const formData = new FormData(this);
+    
+    // Capture details of the bundle picked by the user
+    const selectedRadio = document.querySelector('input[name="bundle"]:checked').value;
+    const b = bundleData.find(x => x.id === selectedRadio);
+    formData.append('bundleName', b.name);
+    formData.append('bundlePrice', '₹' + b.price);
+
+    // PASTE YOUR GOOGLE WEB APP URL FROM STEP 3 BETWEEN THE QUOTES BELOW:
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwyrC3BHYFPtSSqiOGtqLWPiZNWEbg55qVVV4PMaco82Db9URsbYTWLGmVCM3nWu4UA1w/exec';
+
+    fetch(WEB_APP_URL, {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.result === 'success') {
+        // Render the true, verified sequential ID sent back from Google Sheets
+        const dynamicRef = data.orderRef;
+
+        document.getElementById('confirmName').textContent = `Thanks, ${name.split(' ')[0] || 'there'} — we've noted your order.`;
+        document.getElementById('confirmEmail').textContent = email;
+        document.getElementById('confirmRef').textContent = 'Order ref ' + dynamicRef;
+
+        document.getElementById('formCard').classList.add('hide');
+        document.getElementById('confirmPanel').classList.add('show');
+      } else {
+        throw new Error(data.error);
+      }
+    })
+    .catch(error => {
+      console.error('Submission Error:', error.message);
+      alert('Something went wrong reserving your bundle. Please check your connection and try again.');
+      submitBtn.textContent = 'Reserve this order';
+      submitBtn.disabled = false;
+    });
+  });
+</script>
+
+</body>
+</html>
